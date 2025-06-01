@@ -4,21 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Company Visiting Cards</title>
-  <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
   <h1>Company Visiting Cards</h1>
-  <a href="/create">Add New Company</a>
-  <ul>
-    <% companies.forEach(company => { %>
-      <li>
-        <a href="/company/<%= company._id %>"><%= company.name %></a>
-        <div>
-          <a href="/update/<%= company._id %>">Update</a>
-          <a href="/delete/<%= company._id %>" onclick="return confirm('Are you sure you want to delete this company?')">Delete</a>
-        </div>
-      </li>
-    <% }) %>
-  </ul>
+  <a href="create.html">Add New Company</a>
+  <div>
+    <div>
+      <h2>Company Name</h2>
+      <img src="logo.jpg" alt="Company Logo">
+      <a href="update.html">Update</a>
+      <a href="#">Delete</a>
+    </div>
+  </div>
 </body>
 </html>

@@ -3,28 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><%= company.name %> Details</title>
-  <link rel="stylesheet" href="/css/style.css">
+  <title>Company Details</title>
 </head>
 <body>
-  <div class="visiting-card">
-    <div class="card-header">
-      <% if (company.logo) { %>
-        <img src="/logo/<%= company.logo %>" alt="<%= company.name %> Logo" class="company-logo">
-      <% } %>
-      <h2><%= company.name %></h2>
-    </div>
-    <div class="card-details">
-      <p><strong>Address:</strong> <%= company.address %></p>
-      <p><strong>Phone:</strong> <a href="tel:<%= company.phone %>"><%= company.phone %></a></p>
-      <p><strong>Email:</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a></p>
-      <p><strong>Website:</strong> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
-    </div>
-    <div class="card-footer">
-      <p>Scan to Connect</p>
-      <img src="<%= qrCodeUrl %>" alt="QR Code" class="qr-code">
-    </div>
+  <div>
+    <h1>Company Name</h1>
+    <img src="logo.jpg" alt="Company Logo">
   </div>
-  <a href="/" class="back-link">Back to List</a>
+
+  <div>
+    <p><strong>Address:</strong> 123 Example Street, City, Country</p>
+    <p><strong>Phone:</strong> (123) 456-7890</p>
+    <p><strong>Email:</strong> example@company.com</p>
+    <p><strong>Website:</strong> www.company.com</p>
+  </div>
+
+  <div>
+    <h2>Scan to Connect</h2>
+    <img src="qrcode.png" alt="QR Code">
+  </div>
+
+  <a href="index.html">Back to List</a>
 </body>
 </html>
