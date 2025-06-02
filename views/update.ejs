@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Company</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Update Company</h1>
+  <form action="/update/<%= company._id %>" method="POST" enctype="multipart/form-data">
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <div class="form-section">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" value="<%= company.name %>" required>
+    </div>
+    <div class="form-section">
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" value="<%= company.address %>" required>
+    </div>
+    <div class="form-section">
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" value="<%= company.phone %>" required>
+    </div>
+    <div class="form-section">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" value="<%= company.email %>" required>
+    </div>
+    <div class="form-section">
+      <label for="website">Website:</label>
+      <input type="url" id="website" name="website" value="<%= company.website %>" required>
+    </div>
+    <div class="form-section">
+      <label for="developer">Developer:</label>
+      <input type="text" id="developer" name="developer" value="<%= company.developer %>" required>
+    </div>
+    <div class="form-section">
+      <label for="logo">Logo (leave blank to keep existing):</label>
+      <input type="file" id="logo" name="logo" accept="image/jpeg,image/png">
+      <% if (company.logo) { %>
+        <p class="note">Current logo: <img src="/logo/<%= company.logo %>" alt="Current Logo" style="max-width: 100px; max-height: 100px;"></p>
+      <% } %>
+    </div>
+    <div class="form-section">
+      <label for="mainPhotos">Main Photos/Videos (leave blank to keep existing, up to 5):</label>
+      <div class="photo-preview-container">
+        <% company.mainPhotos.forEach((item, index) => { %>
+          <div class="photo-preview">
+            <% if (item.isVideo) { %>
+              <video src="/photo/<%= item.fileId %>" controls></video>
+            <% } else { %>
+              <img src="/photo/<%= item.fileId %>" alt="<%= item.caption %>">
+            <% } %>
+            <input type="text" name="existingMainPhotoCaptions" value="<%= item.caption %>" class="photo-preview-caption-input">
+            <button type="button" class="remove-photo" onclick="this.parentElement.remove(); addDeleteInput('deleteMainPhotos', '<%= item.fileId %>')">×</button>
+          </div>
+        <% }) %>
+      </div>
+      <input type="file" id="mainPhotos" name="mainPhotos" accept="image/jpeg,image/png,video/mp4" multiple>
+      <p class="note">Select up to 5 photos or videos (Ctrl/Cmd + click). A caption input will appear for each new file below (e.g., "Front Entrance", "Main Hall"). Captions are required.</p>
+      <div class="photo-preview-container" id="mainPhotosPreview"></div>
+    </div>
+    <div class="form-section">
+      <label for="insidePhotos">Inside Photos/Videos (leave blank to keep existing, up to 10):</label>
+      <div class="photo-preview-container">
+        <% company.insidePhotos.forEach((item, index) => { %>
+          <div class="photo-preview">
+            <% if (item.isVideo) { %>
+              <video src="/photo/<%= item.fileId %>" controls></video>
+            <% } else { %>
+              <img src="/photo/<%= item.fileId %>" alt="<%= item.caption %>">
+            <% } %>
+            <input type="text" name="existingInsidePhotoCaptions" value="<%= item.caption %>" class="photo-preview-caption-input">
+            <button type="button" class="remove-photo" onclick="this.parentElement.remove(); addDeleteInput('deleteInsidePhotos', '<%= item.fileId %>')">×</button>
+          </div>
+        <% }) %>
+      </div>
+      <input type="file" id="insidePhotos" name="insidePhotos" accept="image/jpeg,image/png,video/mp4" multiple>
+      <p class="note">Select up to 10 photos or videos (Ctrl/Cmd + click). A caption input will appear for each new file below (e.g., "Living Room", "Bedroom"). Captions are required.</p>
+      <div class="photo-preview-container" id="insidePhotosPreview"></div>
+    </div>
+    <div class="form-section">
+      <label for="location">Location (for Google Maps):</label>
+      <input type="text" id="location" name="location" value="<%= company.location %>" required>
+    </div>
+    <div class="form-section">
+      <label for="agentName">Agent Name:</label>
+      <input type="text" id="agentName" name="agentName" value="<%= company.agent.name %>" required>
+    </div>
+    <div class="form-section">
+      <label for="agentPhone">Agent Phone:</label>
+      <input type="text" id="agentPhone" name="agentPhone" value="<%= company.agent.phone %>" required>
+    </div>
+    <div class="form-section">
+      <label for="agentEmail">Agent Email:</label>
+      <input type="text" id="agentEmail" name="agentEmail" value="<%= company.agent.email %>" required>
+    </div>
+    <div class="form-section">
+      <label for="agentRole">Agent Role:</label>
+      <input type="text" id="agentRole" name="agentRole" value="<%= company.agent.role %>" required>
+    </div>
+    <button type="submit">Update</button>
+  </form>
+  <a href="/" class="back-link">Back to List</a>
+
+  <script>
+    function addDeleteInput(name, value) {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = name;
+      input.value = value;
+      document.querySelector('form').appendChild(input);
+    }
+
+    function handleFilePreview(inputId, previewContainerId, maxFiles) {
+      const input = document.getElementById(inputId);
+      const previewContainer = document.getElementById(previewContainerId);
+
+      input.addEventListener('change', () => {
+        previewContainer.innerHTML = '';
+        const files = input.files;
+        if (files.length > maxFiles) {
+          alert(`Please select up to ${maxFiles} files.`);
+          input.value = '';
+          return;
+        }
+
+        Array.from(files).forEach((file, index) => {
+          const reader = new FileReader();
+          const previewDiv = document.createElement('div');
+          previewDiv.className = 'photo-preview';
+
+          const mediaElement = file.type.includes('video') ? document.createElement('video') : document.createElement('img');
+          mediaElement.className = 'preview-media';
+          if (file.type.includes('video')) {
+            mediaElement.controls = true;
+          }
+
+          reader.onload = (e) => {
+            mediaElement.src = e.target.result;
+            previewDiv.appendChild(mediaElement);
+
+            const captionInput = document.createElement('input');
+            captionInput.type = 'text';
+            captionInput.name = `${inputId}Captions`;
+            captionInput.className = 'photo-preview-caption-input';
+            captionInput.placeholder = 'Enter caption';
+            captionInput.required = true;
+            previewDiv.appendChild(captionInput);
+          };
+
+          reader.readAsDataURL(file);
+          previewContainer.appendChild(previewDiv);
+        });
+      });
+    }
+
+    handleFilePreview('mainPhotos', 'mainPhotosPreview', 5);
+    handleFilePreview('insidePhotos', 'insidePhotosPreview', 10);
+  </script>
+</body>
+</html>

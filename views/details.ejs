@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= company.name %> Details</title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+  <div class="visiting-card">
+    <div class="card-header">
+      <% if (company.logo) { %>
+        <img src="/logo/<%= company.logo %>" alt="<%= company.name %> Logo" class="company-logo">
+      <% } %>
+      <h2><%= company.name %></h2>
+    </div>
+    <div class="card-details">
+      <p><strong>Address:</strong> <%= company.address %></p>
+      <p><strong>Phone:</strong> <a href="tel:<%= company.phone %>"><%= company.phone %></a></p>
+      <p><strong>Email:</strong> <a href="mailto:<%= company.email %>"><%= company.email %></a></p>
+      <p><strong>Website:</strong> <a href="<%= company.website %>" target="_blank"><%= company.website %></a></p>
+    </div>
+    <div class="card-footer">
+      <p>Scan to Connect</p>
+      <img src="<%= qrCodeUrl %>" alt="QR Code" class="qr-code">
+    </div>
+  </div>
+  <a href="/" class="back-link">Back to List</a>
+</body>
+</html>

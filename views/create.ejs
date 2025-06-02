@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add New Company</title>
+  <link rel="stylesheet" href="/css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <h1>Add New Company</h1>
+  <form action="/create" method="POST" enctype="multipart/form-data">
+    <% if (error) { %>
+      <p class="error"><%= error %></p>
+    <% } %>
+    <div class="form-section">
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="name" required>
+    </div>
+    <div class="form-section">
+      <label for="address">Address:</label>
+      <input type="text" id="address" name="address" required>
+    </div>
+    <div class="form-section">
+      <label for="phone">Phone:</label>
+      <input type="text" id="phone" name="phone" required>
+    </div>
+    <div class="form-section">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+    </div>
+    <div class="form-section">
+      <label for="website">Website:</label>
+      <input type="url" id="website" name="website" required>
+    </div>
+    <div class="form-section">
+      <label for="developer">Developer:</label>
+      <input type="text" id="developer" name="developer" required>
+    </div>
+    <div class="form-section">
+      <label for="logo">Logo:</label>
+      <input type="file" id="logo" name="logo" accept="image/jpeg,image/png">
+      <p class="note">Optional: Upload a company logo (JPEG/PNG, max 5MB).</p>
+    </div>
+    <div class="form-section">
+      <label for="mainPhotos">Main Photos/Videos (e.g., building, up to 5):</label>
+      <input type="file" id="mainPhotos" name="mainPhotos" accept="image/jpeg,image/png,video/mp4" multiple>
+      <p class="note">Select up to 5 photos or videos (Ctrl/Cmd + click). A caption input will appear for each file below (e.g., "Front Entrance", "Main Hall"). Captions are required.</p>
+      <div class="photo-preview-container" id="mainPhotosPreview"></div>
+    </div>
+    <div class="form-section">
+      <label for="insidePhotos">Inside Photos/Videos (up to 10):</label>
+      <input type="file" id="insidePhotos" name="insidePhotos" accept="image/jpeg,image/png,video/mp4" multiple>
+      <p class="note">Select up to 10 photos or videos (Ctrl/Cmd + click). A caption input will appear for each file below (e.g., "Living Room", "Bedroom"). Captions are required.</p>
+      <div class="photo-preview-container" id="insidePhotosPreview"></div>
+    </div>
+    <div class="form-section">
+      <label for="location">Location (for Google Maps):</label>
+      <input type="text" id="location" name="location" required>
+    </div>
+    <div class="form-section">
+      <label for="agentName">Agent Name:</label>
+      <input type="text" id="agentName" name="agentName" required>
+    </div>
+    <div class="form-section">
+      <label for="agentPhone">Agent Phone:</label>
+      <input type="text" id="agentPhone" name="agentPhone" required>
+    </div>
+    <div class="form-section">
+      <label for="agentEmail">Agent Email:</label>
+      <input type="email" id="agentEmail" name="agentEmail" required>
+    </div>
+    <div class="form-section">
+      <label for="agentRole">Agent Role:</label>
+      <input type="text" id="agentRole" name="agentRole" required>
+    </div>
+    <button type="submit">Submit</button>
+  </form>
+  <a href="/" class="back-link">Back to List</a>
+
+  <script>
+    function handleFilePreview(inputId, previewContainerId, maxFiles) {
+      const input = document.getElementById(inputId);
+      const previewContainer = document.getElementById(previewContainerId);
+
+      input.addEventListener('change', () => {
+        previewContainer.innerHTML = '';
+        const files = input.files;
+        if (files.length > maxFiles) {
+          alert(`Please select up to ${maxFiles} files.`);
+          input.value = '';
+          return;
+        }
+
+        Array.from(files).forEach((file, index) => {
+          const reader = new FileReader();
+          const previewDiv = document.createElement('div');
+          previewDiv.className = 'photo-preview';
+
+          const mediaElement = file.type.includes('video') ? document.createElement('video') : document.createElement('img');
+          mediaElement.className = 'preview-media';
+          if (file.type.includes('video')) {
+            mediaElement.controls = true;
+          }
+
+          reader.onload = (e) => {
+            mediaElement.src = e.target.result;
+            previewDiv.appendChild(mediaElement);
+
+            const captionInput = document.createElement('input');
+            captionInput.type = 'text';
+            captionInput.name = `${inputId}Captions`;
+            captionInput.className = 'photo-preview-caption-input';
+            captionInput.placeholder = 'Enter caption';
+            captionInput.required = true;
+            previewDiv.appendChild(captionInput);
+          };
+
+          reader.readAsDataURL(file);
+          previewContainer.appendChild(previewDiv);
+        });
+      });
+    }
+
+    handleFilePreview('mainPhotos', 'mainPhotosPreview', 5);
+    handleFilePreview('insidePhotos', 'insidePhotosPreview', 10);
+  </script>
+</body>
+</html>
